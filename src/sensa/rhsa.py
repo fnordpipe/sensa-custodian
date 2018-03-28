@@ -48,5 +48,71 @@ class SensaRHSAParser(object):
           break
 
     lines = lines[_lines:]
+    self.data['summary'] = []
+    self.data['releases'] = []
+    self.data['description'] = []
+    self.data['solution'] = []
+    self.data['bugs'] = []
+    self.data['packages'] = []
+    self.data['references'] = []
+    _releases = []
+    topic = None
+
+    for line in lines:
+      # find beginning of text block
+      if line.endswith(b'Summary:'):
+        topic = 'summary'
+        continue
+      if line.endswith(b'Relevant releases/architectures:'):
+        topic = 'releases'
+        continue
+      if line.endswith(b'Description:'):
+        topic = 'description'
+        continue
+      if line.endswith(b'Solution:'):
+        topic = 'solution'
+        continue
+      if line.endswith(b'Bugs fixed (https://bugzilla.redhat.com/):'):
+        topic = 'bugs'
+        continue
+      if line.endswith(b'Package List:'):
+        topic = 'packages'
+        continue
+      if line.endswith(b'References:'):
+        topic = 'references'
+        continue
+      if line.endswith(b'Contact:'):
+        topic = 'contact'
+        continue
+
+      if topic in ['summary', 'description', 'solution']:
+        self.data[topic].append(line)
+
+      if topic in ['bugs', 'references'] and line:
+        if topic == 'bugs':
+          self.data[topic].append(line.split(b' - '))
+        else:
+          self.data[topic].append(line)
+
+      if topic == 'releases' and line:
+        release = line.split(b' - ')
+        release[1] = release[1].split(b', ')
+        _releases.append(release[0])
+        self.data[topic].append(release)
+
+      if topic == 'packages':
+        if line.strip(b':') in _releases:
+          self.data[topic].append([line.strip(b':')])
+        elif line.endswith(b':'):
+          arch = line.strip(b':')
+          if arch == 'Source':
+            arch = arch.lower()
+          self.data[topic][-1].append([arch, []])
+        elif line.endswith(b'.rpm'):
+          self.data[topic][-1][-1][1].append(line)
+
+    for t in ['description', 'solution', 'summary']:
+      if not self.data[t][0] and not self.data[t][-1]:
+        self.data[t] = b'\n'.join(self.data[t][1:-1])
 
     return self.data
