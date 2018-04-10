@@ -68,7 +68,7 @@ class SensaMigrate(object):
             package VARCHAR(255) NOT NULL );")
 
       cursor.execute(
-        "CREATE TABLE IF NOT EXISTS advisory_release_architecture ( \
+        "CREATE TABLE IF NOT EXISTS advisory_release_architecture_package ( \
             id SERIAL PRIMARY KEY NOT NULL, \
             advisory_id INT NOT NULL, \
             release_id INT NOT NULL, \
