@@ -1,41 +1,18 @@
-# sensa; easy (and) neat security advisories
+# Moved to GitLab
 
-I wrote this tool to get a better overview about existing security issues regarding the software
-that is in place.
-Most software distributors are sending their security advisories via mail therefore
-**sensa** is listening to these mails and normalizes it for persistence.
+Due to the recent circumstances where GitHub has been acquired by Microsoft, 
+I have decided to leave this place. There can't be any better time to move 
+to an open-source project (at least one where most parts are) rather than 
+staying and by that supporting Microsoft to build up yet another monopoly 
+based on a closed-source software.
 
-## requirements
+**This repository is now hosted on [GitLab](https://gitlab.com/fnordpipe)**
 
-* postfix
-* a postgres database
-* python-asyncore
-* python-docopt
-* python-json
-* python-psycopg2
+We already live in a world almost exclusively controlled by closed software.
+I hope as many people as possible will follow, in order to build up a 
+new open-source standard of git hosting. I believe that all developers 
+(especially open-source developers) should understand this point of view.
 
-> instead of postfix you can use any other MTA that is able to redirect messages
-> from security-advisory mailing-lists to another relay.
+I highly appreciate anyone who takes the opportunity and does the same.
 
-## usage
-
-    $ sensa-custodian.py [-c FILE]
-
-the default config file is located at `/etc/sensa/custodian.conf`
-
-    $ cat custodian.conf
-    {
-      "db": {
-        "host": "127.0.0.1",
-        "port": "5432",
-        "user": "sensa",
-        "pass": "changeme",
-        "name": "sensa"
-      },
-      "smtp": {
-        "port": 10025
-      },
-      "subscriptions": [
-        "rhsa"
-      ]
-    }
+See you on GitLab
